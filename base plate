@@ -1,0 +1,39 @@
+ubuntu22.04 ROS2
+首次使用控制底盘教程：
+在ubuntu系统主界面开启终端，输入如下指令绑定小车：
+echo "export BASE_TYPE=M100" >> ~/.bashrc
+
+设置root用户密码：
+sudo passwd
+
+切换root到用户：
+su
+
+终端用户名前面出现 “root@”之后再输入：
+sudo echo "KERNEL==\"ttyUSB*\", ATTRS{idVendor}==\"1a86\", ATTRS{idProduct}==\"7523\", MODE:=\"0777\", SYMLINK+=\"base\"" >> /etc/udev/rules.d/codbot_usb.rules
+
+输入指令重新加载dev规则：
+udevadm control --reload-rules && udevadm trigger
+
+查询串口是否绑定，如果出现ttyUSB0等指令则表示串口绑定成功：
+ls -l /dev | grep ttyUSB
+
+创建工作空间：
+mkdir -p codbot_ws/src
+
+初始化工作空间：
+cd codbot_ws/ && colcon build
+
+把提供的ROS驱动包解压后复制到codbot_ws/src文件夹下
+
+在工作空间下启动终端，编译：
+colcon build
+
+将编译生成的环境配置加载到工作空间：
+source ~/codbot_ws/install/setup.bash
+
+启动驱动程序：
+ros2 launch codbot_base codbot_base.launch.py
+
+使用键盘控制程序：
+ros2 run teleop_twist_keyboard teleop_twist_keyboard
